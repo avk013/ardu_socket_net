@@ -17,10 +17,11 @@ char server[] = "edis.pp.ua";
 IPAddress ip(192,168,200,89);
 IPAddress gw(192,168,200,223);
 IPAddress dnsr(8,8,8,8);
-
+int pin_rele1=A0;
 int i=0;
 EthernetClient client;
 void setup() {
+  pinMode(pin_rele1, OUTPUT);
   Serial.begin(9600);
    while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
@@ -35,7 +36,7 @@ void readnet()
 Ethernet.begin(mac,ip,dnsr,gw); 
 //Serial.print("static OK"); 
 delay(1000);
- Serial.println("...");
+ Serial.println("*");
 //  Serial.println("connect to server");
     if (client.connect(server,80)) {
   //  Serial.println("connected");
@@ -65,6 +66,6 @@ void loop()
   if (client.available()) {
     c = client.read();
 }
-  if(c=='$'){c = client.read(); if(c=='1') Serial.println("OK+");else Serial.println("OK-");}
+  if(c=='$'){c = client.read(); if(c=='1') {Serial.println("+");digitalWrite(pin_rele1, HIGH);}else {Serial.println("-");digitalWrite(pin_rele1, LOW);}}
   if (i>=25) readnet();
 }
